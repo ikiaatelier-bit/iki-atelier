@@ -1,0 +1,814 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<meta name="description" content="Iki Atelier — Virtual 1:1 makeup coaching and personal color analysis. Each session crafted su misura.">
+<title>Iki Atelier — Makeup Coaching · Color Analysis</title>
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link href="https://fonts.googleapis.com/css2?family=Unbounded:wght@200;300&family=Cormorant+Upright:ital,wght@0,300;0,400;1,300;1,400&family=Jost:wght@100;200;300;400&display=swap" rel="stylesheet">
+<style>
+/* ── Tokens ─────────────────────────────────── */
+:root {
+  --moss:         #2A2E24;
+  --moss-mid:     #3A3E30;
+  --stone:        #7A7A5A;
+  --stone-light:  #9A9A7A;
+  --linen:        #DDD5BE;
+  --parchment:    #EDE5D5;
+  --pale-linen:   #F4F0E5;
+  --rule:         rgba(221,213,190,0.13);
+  --rule-light:   rgba(42,46,36,0.1);
+}
+
+/* ── Reset ──────────────────────────────────── */
+*, *::before, *::after { box-sizing: border-box; margin: 0; padding: 0; }
+html { scroll-behavior: smooth; }
+
+body {
+  background: var(--pale-linen);
+  color: var(--moss);
+  font-family: 'Jost', sans-serif;
+  font-weight: 200;
+  -webkit-font-smoothing: antialiased;
+  text-rendering: optimizeLegibility;
+}
+
+/* ── Lang toggle ────────────────────────────── */
+.lang-bar {
+  position: fixed;
+  top: 0;
+  left: 0;
+  right: 0;
+  z-index: 100;
+  display: flex;
+  justify-content: flex-end;
+  padding: 14px 40px;
+  background: rgba(244,240,229,0.88);
+  backdrop-filter: blur(10px);
+  -webkit-backdrop-filter: blur(10px);
+  border-bottom: 0.5px solid var(--rule-light);
+}
+
+.lang-toggle {
+  display: flex;
+  align-items: center;
+  gap: 0;
+  border: 0.5px solid rgba(42,46,36,0.2);
+  border-radius: 2px;
+  overflow: hidden;
+}
+
+.lang-btn {
+  background: transparent;
+  border: none;
+  cursor: pointer;
+  font-family: 'Jost', sans-serif;
+  font-weight: 300;
+  font-size: 10px;
+  letter-spacing: 0.22em;
+  text-transform: uppercase;
+  color: var(--stone);
+  padding: 6px 14px;
+  transition: background 0.2s, color 0.2s;
+}
+
+.lang-btn.active {
+  background: var(--moss);
+  color: var(--linen);
+}
+
+.lang-divider {
+  width: 0.5px;
+  height: 28px;
+  background: rgba(42,46,36,0.2);
+}
+
+/* ── Hero ───────────────────────────────────── */
+.hero {
+  background: var(--moss);
+  min-height: 100vh;
+  display: flex;
+  flex-direction: column;
+  justify-content: space-between;
+  padding: 120px 80px 64px;
+  position: relative;
+  overflow: hidden;
+}
+
+.hero::before {
+  content: '';
+  position: absolute;
+  inset: 0;
+  background: radial-gradient(ellipse at 75% 20%, rgba(58,62,48,0.7) 0%, transparent 55%);
+  pointer-events: none;
+}
+
+.hero-inner { position: relative; z-index: 1; }
+
+.wordmark {
+  display: flex;
+  flex-direction: column;
+  align-items: flex-start;
+  margin-bottom: 64px;
+}
+
+.wm-iki {
+  font-family: 'Unbounded', sans-serif;
+  font-weight: 200;
+  font-size: clamp(52px, 8vw, 80px);
+  color: var(--linen);
+  line-height: 0.9;
+  letter-spacing: -0.01em;
+}
+
+.wm-row {
+  display: flex;
+  align-items: center;
+  gap: 10px;
+  margin-top: 10px;
+}
+
+.wm-rule { width: 16px; height: 0.5px; background: var(--linen); opacity: 0.4; flex-shrink: 0; }
+
+.wm-atelier {
+  font-family: 'Jost', sans-serif;
+  font-weight: 200;
+  font-size: 9px;
+  letter-spacing: 0.48em;
+  text-transform: uppercase;
+  color: var(--linen);
+}
+
+.hero-service {
+  font-family: 'Jost', sans-serif;
+  font-weight: 200;
+  font-size: 10px;
+  letter-spacing: 0.38em;
+  text-transform: uppercase;
+  color: var(--stone-light);
+  margin-bottom: 24px;
+}
+
+.hero-headline {
+  font-family: 'Cormorant Upright', serif;
+  font-weight: 300;
+  font-size: clamp(28px, 4.5vw, 52px);
+  color: var(--linen);
+  line-height: 1.2;
+  max-width: 680px;
+  margin-bottom: 28px;
+}
+
+.hero-sub {
+  font-family: 'Jost', sans-serif;
+  font-weight: 200;
+  font-size: 13px;
+  color: var(--stone-light);
+  letter-spacing: 0.08em;
+  max-width: 480px;
+  line-height: 1.8;
+  margin-bottom: 48px;
+}
+
+.hero-cta {
+  display: inline-block;
+  background: var(--linen);
+  color: var(--moss);
+  font-family: 'Jost', sans-serif;
+  font-weight: 300;
+  font-size: 10px;
+  letter-spacing: 0.32em;
+  text-transform: uppercase;
+  text-decoration: none;
+  padding: 16px 36px;
+  border: none;
+  cursor: pointer;
+  transition: background 0.2s, color 0.2s;
+}
+
+.hero-cta:hover {
+  background: var(--parchment);
+}
+
+.hero-footer {
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  position: relative;
+  z-index: 1;
+  padding-top: 40px;
+  border-top: 0.5px solid var(--rule);
+}
+
+.hero-footer-left {
+  font-family: 'Jost', sans-serif;
+  font-weight: 100;
+  font-size: 10px;
+  letter-spacing: 0.28em;
+  text-transform: uppercase;
+  color: rgba(221,213,190,0.25);
+}
+
+.hero-motto {
+  font-family: 'Cormorant Upright', serif;
+  font-style: italic;
+  font-weight: 300;
+  font-size: 13px;
+  color: rgba(221,213,190,0.35);
+  letter-spacing: 0.04em;
+}
+
+/* ── Shared section ─────────────────────────── */
+.section {
+  padding: 96px 80px;
+  border-bottom: 0.5px solid var(--rule-light);
+}
+
+.section.dark {
+  background: var(--moss);
+  color: var(--linen);
+  border-bottom: 0.5px solid var(--rule);
+}
+
+.section.mid {
+  background: var(--parchment);
+}
+
+.section-label {
+  font-family: 'Jost', sans-serif;
+  font-weight: 200;
+  font-size: 9px;
+  letter-spacing: 0.4em;
+  text-transform: uppercase;
+  color: var(--stone);
+  margin-bottom: 40px;
+}
+
+.dark .section-label { color: var(--stone-light); }
+
+.section-rule {
+  width: 32px;
+  height: 0.5px;
+  background: var(--stone);
+  margin-bottom: 32px;
+}
+
+.dark .section-rule { background: var(--stone-light); }
+
+/* ── What this is ───────────────────────────── */
+.what-grid {
+  display: grid;
+  grid-template-columns: 1fr 1fr;
+  gap: 64px;
+  align-items: start;
+}
+
+.what-headline {
+  font-family: 'Cormorant Upright', serif;
+  font-weight: 300;
+  font-size: clamp(24px, 3.5vw, 40px);
+  line-height: 1.3;
+  color: var(--moss);
+  max-width: 480px;
+}
+
+.what-body {
+  font-family: 'Jost', sans-serif;
+  font-weight: 200;
+  font-size: 14px;
+  line-height: 1.85;
+  color: var(--moss);
+}
+
+.what-body p + p { margin-top: 18px; }
+
+/* ── Who it's for ───────────────────────────── */
+.for-list {
+  display: grid;
+  grid-template-columns: repeat(2, 1fr);
+  gap: 2px;
+  max-width: 800px;
+}
+
+.for-item {
+  background: var(--moss-mid);
+  padding: 32px 36px;
+}
+
+.for-item-num {
+  font-family: 'Cormorant Upright', serif;
+  font-weight: 300;
+  font-size: 11px;
+  color: var(--stone);
+  letter-spacing: 0.1em;
+  margin-bottom: 14px;
+}
+
+.for-item-text {
+  font-family: 'Jost', sans-serif;
+  font-weight: 200;
+  font-size: 13px;
+  line-height: 1.75;
+  color: var(--linen);
+}
+
+/* ── Session ────────────────────────────────── */
+.session-grid {
+  display: grid;
+  grid-template-columns: 1fr 1fr;
+  gap: 64px;
+  align-items: start;
+}
+
+.session-steps {
+  display: flex;
+  flex-direction: column;
+  gap: 0;
+}
+
+.session-step {
+  display: grid;
+  grid-template-columns: 40px 1fr;
+  gap: 20px;
+  padding: 28px 0;
+  border-bottom: 0.5px solid var(--rule-light);
+}
+
+.session-step:last-child { border-bottom: none; }
+
+.step-num {
+  font-family: 'Cormorant Upright', serif;
+  font-weight: 300;
+  font-size: 18px;
+  color: var(--stone);
+  padding-top: 2px;
+}
+
+.step-text {
+  font-family: 'Jost', sans-serif;
+  font-weight: 200;
+  font-size: 13px;
+  line-height: 1.8;
+  color: var(--moss);
+}
+
+.step-text strong {
+  font-weight: 300;
+  display: block;
+  margin-bottom: 4px;
+  font-size: 13px;
+  color: var(--moss);
+}
+
+.outcome-block {
+  display: flex;
+  flex-direction: column;
+  justify-content: center;
+  gap: 0;
+}
+
+.outcome-quote {
+  font-family: 'Cormorant Upright', serif;
+  font-style: italic;
+  font-weight: 300;
+  font-size: clamp(20px, 3vw, 30px);
+  line-height: 1.4;
+  color: var(--moss);
+  max-width: 380px;
+  margin-bottom: 28px;
+}
+
+.outcome-body {
+  font-family: 'Jost', sans-serif;
+  font-weight: 200;
+  font-size: 13px;
+  line-height: 1.85;
+  color: var(--stone);
+}
+
+/* ── Pricing ────────────────────────────────── */
+.pricing-card {
+  background: var(--linen);
+  padding: 56px 64px;
+  max-width: 680px;
+}
+
+.pricing-header {
+  font-family: 'Jost', sans-serif;
+  font-weight: 200;
+  font-size: 9px;
+  letter-spacing: 0.4em;
+  text-transform: uppercase;
+  color: var(--stone);
+  margin-bottom: 32px;
+}
+
+.pricing-details {
+  display: grid;
+  grid-template-columns: 1fr 1fr;
+  gap: 32px;
+  margin-bottom: 40px;
+}
+
+.pricing-item-label {
+  font-family: 'Jost', sans-serif;
+  font-weight: 200;
+  font-size: 9px;
+  letter-spacing: 0.3em;
+  text-transform: uppercase;
+  color: var(--stone);
+  margin-bottom: 8px;
+}
+
+.pricing-item-value {
+  font-family: 'Cormorant Upright', serif;
+  font-weight: 300;
+  font-size: 20px;
+  color: var(--moss);
+  line-height: 1.2;
+}
+
+.pricing-price-row {
+  display: flex;
+  align-items: baseline;
+  gap: 16px;
+  margin-bottom: 16px;
+}
+
+.price-founding {
+  font-family: 'Cormorant Upright', serif;
+  font-weight: 300;
+  font-size: 48px;
+  color: var(--moss);
+  line-height: 1;
+}
+
+.price-full {
+  font-family: 'Jost', sans-serif;
+  font-weight: 200;
+  font-size: 13px;
+  color: var(--stone);
+  text-decoration: line-through;
+  letter-spacing: 0.06em;
+}
+
+.price-badge {
+  font-family: 'Jost', sans-serif;
+  font-weight: 200;
+  font-size: 9px;
+  letter-spacing: 0.28em;
+  text-transform: uppercase;
+  color: var(--stone);
+  border: 0.5px solid var(--stone);
+  padding: 4px 10px;
+  align-self: center;
+}
+
+.pricing-note {
+  font-family: 'Jost', sans-serif;
+  font-weight: 200;
+  font-size: 12px;
+  line-height: 1.85;
+  color: var(--stone);
+  max-width: 480px;
+  margin-bottom: 40px;
+}
+
+.pricing-cta {
+  display: inline-block;
+  background: var(--moss);
+  color: var(--linen);
+  font-family: 'Jost', sans-serif;
+  font-weight: 300;
+  font-size: 10px;
+  letter-spacing: 0.32em;
+  text-transform: uppercase;
+  text-decoration: none;
+  padding: 16px 36px;
+  cursor: pointer;
+  border: none;
+  transition: background 0.2s;
+}
+
+.pricing-cta:hover { background: var(--moss-mid); }
+
+/* ── Footer ─────────────────────────────────── */
+.footer {
+  background: var(--moss);
+  padding: 64px 80px;
+  display: flex;
+  justify-content: space-between;
+  align-items: flex-end;
+}
+
+.footer-left {
+  display: flex;
+  flex-direction: column;
+  gap: 20px;
+}
+
+.footer-wordmark-iki {
+  font-family: 'Unbounded', sans-serif;
+  font-weight: 200;
+  font-size: 36px;
+  color: var(--linen);
+  line-height: 0.9;
+  letter-spacing: -0.01em;
+}
+
+.footer-meta {
+  font-family: 'Jost', sans-serif;
+  font-weight: 100;
+  font-size: 10px;
+  letter-spacing: 0.3em;
+  text-transform: uppercase;
+  color: rgba(221,213,190,0.3);
+}
+
+.footer-links {
+  display: flex;
+  flex-direction: column;
+  gap: 10px;
+  align-items: flex-end;
+}
+
+.footer-link {
+  font-family: 'Jost', sans-serif;
+  font-weight: 200;
+  font-size: 10px;
+  letter-spacing: 0.24em;
+  text-transform: uppercase;
+  color: rgba(221,213,190,0.35);
+  text-decoration: none;
+  transition: color 0.2s;
+}
+
+.footer-link:hover { color: var(--linen); }
+
+.footer-motto {
+  font-family: 'Cormorant Upright', serif;
+  font-style: italic;
+  font-weight: 300;
+  font-size: 13px;
+  color: rgba(221,213,190,0.3);
+}
+
+/* ── Responsive ─────────────────────────────── */
+@media (max-width: 768px) {
+  .lang-bar { padding: 12px 24px; }
+  .hero { padding: 100px 28px 48px; }
+  .section { padding: 64px 28px; }
+  .what-grid { grid-template-columns: 1fr; gap: 36px; }
+  .for-list { grid-template-columns: 1fr; }
+  .session-grid { grid-template-columns: 1fr; gap: 40px; }
+  .pricing-card { padding: 40px 28px; }
+  .pricing-details { grid-template-columns: 1fr; gap: 20px; }
+  .footer { padding: 48px 28px; flex-direction: column; gap: 36px; align-items: flex-start; }
+  .footer-links { align-items: flex-start; }
+}
+</style>
+</head>
+<body>
+
+<!-- ── Language bar ──────────────────────────── -->
+<nav class="lang-bar" role="navigation" aria-label="Language selection">
+  <div class="lang-toggle">
+    <button class="lang-btn active" id="btn-en" onclick="setLang('en')" aria-label="English">EN</button>
+    <div class="lang-divider"></div>
+    <button class="lang-btn" id="btn-it" onclick="setLang('it')" aria-label="Italiano">IT</button>
+  </div>
+</nav>
+
+<!-- ── Hero ─────────────────────────────────── -->
+<header class="hero">
+  <div class="hero-inner">
+    <div class="wordmark">
+      <span class="wm-iki">Iki</span>
+      <div class="wm-row">
+        <div class="wm-rule"></div>
+        <span class="wm-atelier">Atelier</span>
+      </div>
+    </div>
+
+    <div class="hero-service">
+      <span data-en="Makeup Coaching · Color Analysis" data-it="Makeup Coaching · Analisi del Colore">Makeup Coaching · Color Analysis</span>
+    </div>
+
+    <h1 class="hero-headline" data-en="1:1 tailored beauty sessions for women who are tired of guessing and want to finally understand what suits them." data-it="Sessioni beauty 1:1 su misura per donne stanche di andare a tentativi e che vogliono finalmente capire ciò che le valorizza davvero.">
+      1:1 tailored beauty sessions for women who are tired of guessing and want to finally understand what suits them.
+    </h1>
+
+    <p class="hero-sub" data-en="Color, shape, technique — built around you." data-it="Colore, forma, tecnica — costruiti intorno a te.">
+      Color, shape, technique — built around you.
+    </p>
+
+    <!-- REPLACE href with your Calendly link -->
+    <a class="hero-cta" href="#booking" data-en="Book your session" data-it="Prenota la tua sessione">Book your session</a>
+  </div>
+
+  <div class="hero-footer">
+    <span class="hero-footer-left">@iki.atelier</span>
+    <span class="hero-motto">
+      <em data-en="crafted su misura" data-it="crafted su misura">crafted su misura</em>
+    </span>
+  </div>
+</header>
+
+<!-- ── What this is ──────────────────────────── -->
+<section class="section" aria-labelledby="what-label">
+  <div class="section-label" id="what-label" data-en="What this is" data-it="Che cos'è">What this is</div>
+  <div class="section-rule"></div>
+
+  <div class="what-grid">
+    <h2 class="what-headline" data-en="A private online studio for women who want calm, expert guidance on what truly suits them." data-it="Uno studio online privato per donne che vogliono una guida esperta e serena su ciò che le valorizza davvero.">
+      A private online studio for women who want calm, expert guidance on what truly suits them.
+    </h2>
+
+    <div class="what-body">
+      <p data-en="Iki Atelier is a virtual beauty guidance studio offering 1:1 color analysis and makeup coaching. It is built for women who feel overwhelmed by products, trends, and generic tutorials, and who want guidance that is specific to their face, their coloring, and their life." data-it="Iki Atelier è uno studio online di consulenza beauty privata che offre sessioni 1:1 di analisi del colore e makeup coaching. È pensato per donne che si sentono sopraffatte da prodotti, tendenze e tutorial generici, e che vogliono una guida specifica per il loro viso, la loro colorazione e la loro vita.">
+        Iki Atelier is a virtual beauty guidance studio offering 1:1 color analysis and makeup coaching. It is built for women who feel overwhelmed by products, trends, and generic tutorials, and who want guidance that is specific to their face, their coloring, and their life.
+      </p>
+      <p data-en="The session is not a tutorial. It is a structured conversation that ends with a clear, personalized picture of what works for you and why." data-it="La sessione non è un tutorial. È una conversazione strutturata che si conclude con un quadro chiaro e personalizzato di ciò che funziona per te e perché.">
+        The session is not a tutorial. It is a structured conversation that ends with a clear, personalized picture of what works for you and why.
+      </p>
+    </div>
+  </div>
+</section>
+
+<!-- ── Who it's for ──────────────────────────── -->
+<section class="section dark" aria-labelledby="for-label">
+  <div class="section-label" id="for-label" data-en="Who it is for" data-it="Per chi è">Who it is for</div>
+  <div class="section-rule"></div>
+
+  <div class="for-list">
+    <div class="for-item">
+      <div class="for-item-num">01</div>
+      <p class="for-item-text" data-en="Women who are tired of guessing what suits them and want to stop wasting time on products that do not work." data-it="Donne stanche di andare a tentativi e che vogliono smettere di sprecare tempo con prodotti che non funzionano.">
+        Women who are tired of guessing what suits them and want to stop wasting time on products that do not work.
+      </p>
+    </div>
+    <div class="for-item">
+      <div class="for-item-num">02</div>
+      <p class="for-item-text" data-en="Women who have watched tutorials, followed trends, and still feel their routine does not feel quite right." data-it="Donne che hanno guardato tutorial, seguito le tendenze, e sentono ancora che la loro routine non è davvero giusta.">
+        Women who have watched tutorials, followed trends, and still feel their routine does not feel quite right.
+      </p>
+    </div>
+    <div class="for-item">
+      <div class="for-item-num">03</div>
+      <p class="for-item-text" data-en="Women who want to understand their colors, their features, and their technique with more clarity and confidence." data-it="Donne che vogliono capire meglio i propri colori, lineamenti e tecnica con più chiarezza e sicurezza.">
+        Women who want to understand their colors, their features, and their technique with more clarity and confidence.
+      </p>
+    </div>
+    <div class="for-item">
+      <div class="for-item-num">04</div>
+      <p class="for-item-text" data-en="Women who want to feel more like themselves — not more made up." data-it="Donne che vogliono sentirsi più se stesse — non semplicemente più truccate.">
+        Women who want to feel more like themselves — not more made up.
+      </p>
+    </div>
+  </div>
+</section>
+
+<!-- ── What happens ──────────────────────────── -->
+<section class="section" aria-labelledby="session-label">
+  <div class="section-label" id="session-label" data-en="What happens in the session" data-it="Cosa succede durante la sessione">What happens in the session</div>
+  <div class="section-rule"></div>
+
+  <div class="session-grid">
+    <div class="session-steps">
+      <div class="session-step">
+        <span class="step-num">I</span>
+        <div class="step-text">
+          <strong data-en="Audit" data-it="Audit">Audit</strong>
+          <span data-en="A short review of your goals, current routine, and what has and has not worked. This is where the session is calibrated to you." data-it="Una breve revisione dei tuoi obiettivi, della tua routine attuale e di ciò che ha funzionato o meno. È qui che la sessione viene calibrata su di te.">A short review of your goals, current routine, and what has and has not worked. This is where the session is calibrated to you.</span>
+        </div>
+      </div>
+      <div class="session-step">
+        <span class="step-num">II</span>
+        <div class="step-text">
+          <strong data-en="Color and feature analysis" data-it="Analisi del colore e dei lineamenti">Color and feature analysis</strong>
+          <span data-en="A personalized read of your undertone, season, contrast level, and the features that shape what works on your face." data-it="Una lettura personalizzata del tuo sottotono, stagione, livello di contrasto e dei lineamenti che determinano ciò che funziona sul tuo viso.">A personalized read of your undertone, season, contrast level, and the features that shape what works on your face.</span>
+        </div>
+      </div>
+      <div class="session-step">
+        <span class="step-num">III</span>
+        <div class="step-text">
+          <strong data-en="Practical coaching" data-it="Coaching pratico">Practical coaching</strong>
+          <span data-en="Technique guidance, product direction, and adjustments built entirely around your face and your needs — not a generic approach." data-it="Guida tecnica, indicazioni sui prodotti e adattamenti costruiti interamente intorno al tuo viso e alle tue esigenze — non un approccio generico.">Technique guidance, product direction, and adjustments built entirely around your face and your needs — not a generic approach.</span>
+        </div>
+      </div>
+      <div class="session-step">
+        <span class="step-num">IV</span>
+        <div class="step-text">
+          <strong data-en="The Iki Guide" data-it="La Guida Iki">The Iki Guide</strong>
+          <span data-en="A personalized digital guide with your analysis, notes, and recommendations. Yours to keep." data-it="Una guida digitale personalizzata con la tua analisi, note e raccomandazioni. Tua per sempre.">A personalized digital guide with your analysis, notes, and recommendations. Yours to keep.</span>
+        </div>
+      </div>
+    </div>
+
+    <div class="outcome-block">
+      <blockquote class="outcome-quote" data-en="The makeup can be removed. What suits you stays." data-it="Il trucco si rimuove. Ciò che ti valorizza resta.">
+        The makeup can be removed. What suits you stays.
+      </blockquote>
+      <p class="outcome-body" data-en="You leave the session with more clarity, more confidence, and a better understanding of what truly suits you — one you carry with you long after the makeup comes off." data-it="Esci dalla sessione con più chiarezza, più sicurezza e una comprensione più profonda di ciò che ti valorizza davvero — che rimane con te anche dopo aver rimosso il trucco.">
+        You leave the session with more clarity, more confidence, and a better understanding of what truly suits you — one you carry with you long after the makeup comes off.
+      </p>
+    </div>
+  </div>
+</section>
+
+<!-- ── Pricing ────────────────────────────────── -->
+<section class="section mid" id="booking" aria-labelledby="pricing-label">
+  <div class="section-label" id="pricing-label" data-en="Session details" data-it="Dettagli della sessione">Session details</div>
+  <div class="section-rule"></div>
+
+  <div class="pricing-card">
+    <div class="pricing-header" data-en="Private 1:1 — Virtual" data-it="Privata 1:1 — Online">Private 1:1 — Virtual</div>
+
+    <div class="pricing-details">
+      <div>
+        <div class="pricing-item-label" data-en="Format" data-it="Formato">Format</div>
+        <div class="pricing-item-value" data-en="Online, private 1:1 video session" data-it="Sessione privata 1:1 online in video">Online, private 1:1 video session</div>
+      </div>
+      <div>
+        <div class="pricing-item-label" data-en="Duration" data-it="Durata">Duration</div>
+        <div class="pricing-item-value">75–90 min</div>
+      </div>
+      <div>
+        <div class="pricing-item-label" data-en="Includes" data-it="Include">Includes</div>
+        <div class="pricing-item-value" data-en="Color analysis, coaching, The Iki Guide" data-it="Analisi del colore, coaching, La Guida Iki">Color analysis, coaching, The Iki Guide</div>
+      </div>
+      <div>
+        <div class="pricing-item-label" data-en="Availability" data-it="Disponibilità">Availability</div>
+        <div class="pricing-item-value" data-en="Limited founding sessions" data-it="Sessioni di lancio limitate">Limited founding sessions</div>
+      </div>
+    </div>
+
+    <div class="pricing-price-row">
+      <span class="price-founding">€90</span>
+      <span class="price-full">€120</span>
+      <span class="price-badge" data-en="Founding rate" data-it="Prezzo lancio">Founding rate</span>
+    </div>
+
+    <p class="pricing-note" data-en="A full makeup routine often costs far more than a single session — and still leaves you guessing. This session gives you something more valuable: a tailored understanding of what suits you." data-it="Una routine makeup completa spesso costa molto più di una singola sessione — e può comunque lasciarti nel dubbio. Questa sessione ti offre qualcosa di più prezioso: una comprensione su misura di ciò che ti valorizza.">
+      A full makeup routine often costs far more than a single session — and still leaves you guessing. This session gives you something more valuable: a tailored understanding of what suits you.
+    </p>
+
+    <!-- REPLACE href with your Calendly link -->
+    <a class="pricing-cta" href="#" data-en="Book your 1:1 session" data-it="Prenota la tua sessione 1:1">Book your 1:1 session</a>
+  </div>
+</section>
+
+<!-- ── Footer ────────────────────────────────── -->
+<footer class="footer">
+  <div class="footer-left">
+    <div>
+      <div class="footer-wordmark-iki">Iki</div>
+      <div class="wm-row" style="margin-top:8px;">
+        <div class="wm-rule"></div>
+        <span class="wm-atelier">Atelier</span>
+      </div>
+    </div>
+    <span class="footer-meta">© 2026 Iki Atelier · @iki.atelier</span>
+  </div>
+
+  <div class="footer-links">
+    <!-- REPLACE with your actual email -->
+    <a class="footer-link" href="mailto:hello@iki.atelier">hello@iki.atelier</a>
+    <a class="footer-link" href="https://instagram.com/iki.atelier" target="_blank">@iki.atelier</a>
+    <!-- REPLACE with your Calendly link -->
+    <a class="footer-link" href="#booking" data-en="Book a session" data-it="Prenota una sessione">Book a session</a>
+    <div style="height:0.5px;background:rgba(221,213,190,0.1);margin:6px 0;"></div>
+    <span class="footer-motto"><em>crafted su misura</em></span>
+  </div>
+</footer>
+
+<!-- ── Language switch script ─────────────────── -->
+<script>
+var currentLang = 'en';
+
+function setLang(lang) {
+  currentLang = lang;
+  document.documentElement.lang = lang;
+
+  document.getElementById('btn-en').classList.toggle('active', lang === 'en');
+  document.getElementById('btn-it').classList.toggle('active', lang === 'it');
+
+  var els = document.querySelectorAll('[data-en]');
+  els.forEach(function(el) {
+    var text = el.getAttribute('data-' + lang);
+    if (text) {
+      if (el.tagName === 'INPUT' || el.tagName === 'BUTTON') {
+        el.value = text;
+      } else {
+        el.textContent = text;
+      }
+    }
+  });
+}
+
+document.getElementById('btn-en').addEventListener('click', function() { setLang('en'); });
+document.getElementById('btn-it').addEventListener('click', function() { setLang('it'); });
+</script>
+</body>
+</html>
